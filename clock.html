@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+    .clock {
+  border-radius: 50%;
+  height: 20em;
+  padding-bottom: 31%;
+  position: relative;
+  width: 20em;
+}
+
+    .clock.simple {
+        background: #fff url(./ios_clock.svg) no-repeat center;
+        background-size: 88%;
+    }
+
+    .clock.simple:after {
+        background: #000;
+        border-radius: 50%;
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 5%;
+        height: 3%;
+        z-index: 10;
+    }
+
+    .minutes-container, .hours-container, .seconds-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    .hours {
+        background: #000;
+        height: 9%;
+        left: 48.75%;
+        position: absolute;
+        top: 41%;
+        transform-origin: 50% 100%;
+        width: 2.5%;
+    }
+
+    .minutes {
+        background: #FFEB3B;
+        height: 13%;
+        left: 49%;
+        position: absolute;
+        top: 37%;
+        transform-origin: 50% 100%;
+        width: 1.5%;
+    }
+
+    .seconds {
+        background: #E91E63;
+        height: 17%;
+        left: 49.5%;
+        position: absolute;
+        top: 33%;
+        transform-origin: 50% 100%;
+        width: 1%;
+
+    }
+
+    @keyframes rotate {
+        100% {
+            transform: rotateZ(360deg);
+        }
+    }
+
+    .hours-container {
+        animation: rotate 43200s infinite linear;
+    }
+
+    .minutes-container {
+        animation: rotate 3600s infinite linear;
+    }
+    .seconds-container {
+        animation: rotate 60s infinite linear;
+    }
+
+</style>
+
+</head>
+<body>
+
+<div>
+    <article class="clock simple">
+        <div class="hours-container">
+            <div class="hours"></div>
+        </div>
+        <div class="minutes-container">
+            <div class="minutes"></div>
+        </div>
+        <div class="seconds-container">
+            <div class="seconds"></div>
+        </div>
+    </article>
+</div>
+
+<script>
+    (function() {
+        // Initialise any local time clocks
+        initLocalClocks();
+    })();
+
+    function initLocalClocks() {
+        var date = new Date;
+        var seconds = date.getSeconds();
+        var minutes = date.getMinutes();
+        var hours = date.getHours();
+        var hands = [{
+            hand: 'hours',
+            angle: (hours * 30) + (minutes / 2)
+        }, {
+            hand: 'minutes',
+            angle: (minutes * 6)
+        }, {
+            hand: 'seconds',
+            angle: (seconds * 6)
+        }];
+        for (var j = 0; j < hands.length; j++) {
+            var elements = document.querySelectorAll('.' + hands[j].hand);
+            for (var k = 0; k < elements.length; k++) {
+                elements[k].style.webkitTransform = 'rotateZ(' + hands[j].angle + 'deg)';
+                elements[k].style.transform = 'rotateZ(' + hands[j].angle + 'deg)';
+                if (hands[j].hand === 'minutes') {
+                    elements[k].parentNode.setAttribute('data-second-angle', hands[j + 1].angle);
+                }
+            }
+        }
+    }
+</script>
+</body>
+
+</html>
